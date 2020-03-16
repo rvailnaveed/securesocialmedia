@@ -1,18 +1,23 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Home from "./components/Home"
 import Error from "./components/Error"
-import Navbar from "./components/Navbar"
+import Navigation from "./components/Navigation"
 
 function App() {
   return (
-    <main>
-      <Navbar />
-      <Switch>
-        <Route path="/" component={Home} exact />
-        <Route component={Error} />
-      </Switch>
-    </main>
+    <BrowserRouter>
+      <div className="container">
+        <h3 className="m-3 d-flex justify-content-center">Demo</h3>
+
+        <Navigation/>
+        <Switch>
+          <Route path="/"component={Home} exact/>
+          <Route component={Error}/>
+        </Switch>
+      </div>
+    </BrowserRouter>
+    
   )
 }
 

@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {NavLink} from 'react-router-dom';
 import {Navbar, Nav} from 'react-bootstrap';
 
 export default class Navigation extends Component{
@@ -10,6 +9,7 @@ export default class Navigation extends Component{
                 <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
+                        <Nav.Link href="/login">Login</Nav.Link>
                         <Nav.Link href="/">My Feed</Nav.Link>
                         <Nav.Link href="/error">Error</Nav.Link>
                     </Nav>

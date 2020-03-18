@@ -21,3 +21,8 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# credentials
+Firebase.js
+/dunno
+copy.js

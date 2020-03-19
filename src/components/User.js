@@ -26,6 +26,7 @@ class User extends React.Component {
             fullName: this.state.fullName,
             email: this.state.email
         });
+        
         this.setState({
             fullName: "",
             email: ""

@@ -4,7 +4,8 @@ import Home from "./components/Home"
 import Error from "./components/Error"
 import Navigation from "./components/Navigation"
 import Login from "./components/Login";
-import User from "./components/User"
+import User from "./components/User";
+import Test from "./components/Test";
 
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
         <Navigation/>
         <Switch>
           <Route path="/" component={Home} exact/>
+          <Route path="/test" component={Test} exact/>
           <Route path="/user" component={User} exact/>
           <Route path="/login" exact component={Login} />
           <Route component={Error}/>

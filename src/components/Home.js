@@ -46,6 +46,8 @@ class Home extends React.Component {
                 })
             })
 
+            console.log(posts);
+
             //this.sortPosts(posts)
             this.postDataWithoutUserInfo = posts;
 
@@ -70,6 +72,7 @@ class Home extends React.Component {
             var feedData = this.matchAccounts(users);
 
             this.setState({allPosts: feedData});
+            console.log(this.state.allPosts);
             // fetch('https://jsonplaceholder.typicode.com/posts')
             //     .then(response => response.json())
             //     .then(json => this.sortPosts(json))
@@ -225,7 +228,7 @@ class Feed extends React.Component {
         return (
             <div>
                 {this.props.postData.map((post, key) =>
-                    <Post postData={post.text} key={post.posted_by} />
+                    <Post postData={post} key={post.posted_by} />
                 )}
             </div>
         )
@@ -233,56 +236,56 @@ class Feed extends React.Component {
 }
 
 class Post extends React.Component {
-    constructor(props) {
-        super(props)
+    // constructor(props) {
+    //     super(props)
 
-        this.state = {
-            replyWindowStyling: { display: 'none' },
-            replies: []
-        }
+    //     this.state = {
+    //         replyWindowStyling: { display: 'none' },
+    //         replies: []
+    //     }
 
-        this.replyWindowOpen = this.replyWindowOpen.bind(this)
-        this.addReply = this.addReply.bind(this)
+    //     this.replyWindowOpen = this.replyWindowOpen.bind(this)
+    //     this.addReply = this.addReply.bind(this)
 
-        this.postReplies = []
-    }
+    //     this.postReplies = []
+    // }
 
-    replyWindowOpen() {
+    // replyWindowOpen() {
 
-        if (this.state.replyWindowStyling.display === 'none') {
-            this.setState({
-                replyWindowStyling: {
-                    display: 'flex',
-                    flexWrap: 'wrap'
-                }
-            })
-        } else {
-            this.setState({
-                replyWindowStyling: { display: 'none' }
-            })
-        }
-    }
+    //     if (this.state.replyWindowStyling.display === 'none') {
+    //         this.setState({
+    //             replyWindowStyling: {
+    //                 display: 'flex',
+    //                 flexWrap: 'wrap'
+    //             }
+    //         })
+    //     } else {
+    //         this.setState({
+    //             replyWindowStyling: { display: 'none' }
+    //         })
+    //     }
+    // }
 
-    addReply(reply) {
-        let replyData = {
-            name: 'You',
-            username: 'codepen_user',
-            replyID: this.postReplies.length,
-            text: reply,
-            userID: 11
-        }
+    // addReply(reply) {
+    //     let replyData = {
+    //         name: 'You',
+    //         username: 'codepen_user',
+    //         replyID: this.postReplies.length,
+    //         text: reply,
+    //         userID: 11
+    //     }
 
-        this.postReplies.push(replyData)
-        this.setState({
-            replies: this.postReplies
-        })
-    }
+    //     this.postReplies.push(replyData)
+    //     this.setState({
+    //         replies: this.postReplies
+    //     })
+    // }
     render() {
         return (
             <div className="row mx-auto justify-content-start border mt-1 p-2 w-100 align-items-center">
                 <PostContent postData={this.props.postData} />
-                <PostInput replyWindowOpen={this.replyWindowOpen} />
-                <ReplyWindow post={this.addReply} replies={this.state.replies} inlineStyling={this.state.replyWindowStyling} replyName={this.props.postData.username} />
+                {/* <PostInput replyWindowOpen={this.replyWindowOpen} />
+                <ReplyWindow post={this.addReply} replies={this.state.replies} inlineStyling={this.state.replyWindowStyling} replyName={this.props.postData.username} /> */}
             </div>
         )
     }
@@ -290,16 +293,14 @@ class Post extends React.Component {
 
 class PostContent extends React.Component {
     render() {
-        let imageSrc = "https://picsum.photos/50?image" + String(this.props.postData.userId)
         return (
             <div>
                 <div className="col-12 d-flex align-items-center">
-                    <img className={"profileThumb"} src={imageSrc} />
                     <h3 className="font-weight-bold ml-2 mb-1 d-inline-block">{this.props.postData.name}</h3>
-                    <a href="#" className="ml-2 text-muted">@{this.props.postData.username}</a>
+                    <a href="#" className="ml-2 text-muted">@{this.props.postData.posted_by}</a>
                 </div>
                 <div className="col-12">
-                    <p className="mb-0">{this.props.postData.body}</p>
+                    <p className="mb-0">{this.props.postData.text}</p>
                 </div>
             </div>
         )

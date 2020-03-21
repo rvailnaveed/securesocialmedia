@@ -19,9 +19,6 @@ class User extends React.Component {
     addUser = e => {
         e.preventDefault();
         const db = Firestore;
-        db.settings({
-            timestampsInSnapshots: true
-        });
         const userRef = db.collection("users").add({
             fullName: this.state.fullName,
             email: this.state.email

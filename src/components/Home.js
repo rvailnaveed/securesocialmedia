@@ -5,6 +5,9 @@ import CreatePost from "./CreatePost";
 import Feed from "./Feed";
 import UserFeed from "./UserFeed";
 
+var CryptoJS = require("crypto-js");
+var Crypto = require("crypto");
+
 class Home extends React.Component {
     constructor(props) {
         super(props)
@@ -20,7 +23,7 @@ class Home extends React.Component {
         }
        
      //   this.sortPosts = this.sortPosts.bind(this)
-        this.matchAccounts = this.matchAccounts.bind(this)
+     //   this.matchAccounts = this.matchAccounts.bind(this)
         this.userPost = this.userPost.bind(this)
 
         this.loaded = false
@@ -41,13 +44,21 @@ class Home extends React.Component {
             .then(snapshot => {
                 snapshot.docs.forEach((post) => {
                     var postData = post.data();
+                    var uid = postData.uid;
+                    var posted_by = postData.posted_by;
+                    var key = postData.key
+                    var decrypted = CryptoJS.AES.decrypt(postData.body, key).toString(CryptoJS.enc.Latin1);
+
+                    if (uid === 7 && posted_by === "current_user"){
+                        uid = 'current_user';
+                        posted_by = 'You';
+                    }
 
                     posts.push({
-                        userId: postData.posted_by,
+                        uid: uid,
                         id: post.id,
-                        name: postData.posted_by,
-                        username: "other_user" + post.id,
-                        body: postData.text
+                        name: posted_by,
+                        body: decrypted
                     })
                     return;
                 })
@@ -65,7 +76,6 @@ class Home extends React.Component {
             .then(snapshot => {
                 snapshot.docs.forEach((user) => {
                     var userData = user.data();
-                    
                     
                     users.push({
                         id: user.id,
@@ -99,13 +109,29 @@ class Home extends React.Component {
     userPost(post) {
         let totalLength = this.state.allPosts.length + this.state.userPosts.length
         let newPostData = {
-            userId: 7,
-            id: totalLength + 2,
             name: 'You',
-            username: 'current_user',
+            uid: 'current_user',
             body: post,
             userPost: true
         }
+
+        // Generate key for new post
+        var current_date = (new Date()).valueOf().toString();
+        var random_string = Math.random().toString();
+        var key = Crypto.createHash('sha1').update(current_date + random_string).digest('hex');
+
+        var encrypted = CryptoJS.AES.encrypt(post, key).toString();
+        //console.log(encrypted.);
+
+        const db = firestore;
+        var postsRef = db.collection("posts");
+        postsRef.add({
+            uid: 7,
+            posted_by: "current_user",
+            body: encrypted,
+            key: key
+        });
+
 
         this.newUserPosts.unshift(newPostData)
 
@@ -135,19 +161,19 @@ class Home extends React.Component {
     //     return array;
     // }
 
-    matchAccounts(userData) {
-        let completeFeedData = []
-        for (let i = 0; i < this.postDataWithoutUserInfo.length; i++) {
-            for (let j = 0; j < userData.length; j++) {
-                if (this.postDataWithoutUserInfo[i].posted_by === userData[j].id) {
+    // matchAccounts(userData) {
+    //     let completeFeedData = []
+    //     for (let i = 0; i < this.postDataWithoutUserInfo.length; i++) {
+    //         for (let j = 0; j < userData.length; j++) {
+    //             if (this.postDataWithoutUserInfo[i].posted_by === userData[j].id) {
 
-                    completeFeedData.push({ ...this.postDataWithoutUserInfo[i], ...userData[j] })
-                }
-            }
-        }
+    //                 completeFeedData.push({ ...this.postDataWithoutUserInfo[i], ...userData[j] })
+    //             }
+    //         }
+    //     }
 
-        return completeFeedData
-    }
+    //     return completeFeedData
+    // }
 
     render() {
         return (

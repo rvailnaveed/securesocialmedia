@@ -1,5 +1,7 @@
 import React from "react";
 import PostContent from "./PostContent"
+import PostInput from "./PostInput";
+import ReplyWindow from "./ReplyWindow";
 
 class Post extends React.Component {
     constructor(props) {
@@ -50,8 +52,8 @@ class Post extends React.Component {
         return (
             <div className="row mx-auto justify-content-start border mt-1 p-2 w-100 align-items-center">
                 <PostContent postData={this.props.postData} />
-                {/* <PostInput replyWindowOpen={this.replyWindowOpen} />
-                <ReplyWindow post={this.addReply} replies={this.state.replies} inlineStyling={this.state.replyWindowStyling} replyName={this.props.postData.username} /> */}
+                <PostInput replyWindowOpen={this.replyWindowOpen} />
+                <ReplyWindow post={this.addReply} replies={this.state.replies} inlineStyling={this.state.replyWindowStyling} replyName={this.props.postData.username} />
             </div>
         )
     }

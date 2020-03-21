@@ -6,7 +6,7 @@ class PostContent extends React.Component {
             <div>
                 <div className="col-12 d-flex align-items-center">
                     <h3 className="font-weight-bold ml-2 mb-1 d-inline-block">{this.props.postData.name}</h3>
-                    <a href="#" className="ml-2 text-muted">@{this.props.postData.username}</a>
+                    <a href="#" className="ml-2 text-muted">@{this.props.postData.uid}</a>
                 </div>
                 <div className="col-12">
                     <p className="mb-0">{this.props.postData.body}</p>

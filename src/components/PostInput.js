@@ -56,7 +56,6 @@ class PostInput extends React.Component {
                 <i style={this.rtStyle} onClick={this.toggleRetweet} className={this.rtClass}></i>
                 <i onClick={this.props.replyWindowOpen} className="fas fa-reply iconStyling"></i>
             </div>
-
         )
     }
 }

@@ -19,18 +19,15 @@ class Home extends React.Component {
                 name: 'LOADING',
                 username: '@LOADING'
             }],
-            userPosts: []
+            userPosts: [],
+            groupMembers: []
         }
        
-     //   this.sortPosts = this.sortPosts.bind(this)
-     //   this.matchAccounts = this.matchAccounts.bind(this)
         this.userPost = this.userPost.bind(this)
 
         this.loaded = false
-        this.postDataWithoutUserInfo = []
         this.newUserPosts = []
     }
-
 
     componentDidMount() {
 
@@ -38,6 +35,22 @@ class Home extends React.Component {
             const db = firestore;
 
             var postsRef = db.collection("posts");
+            var groupsRef = db.collection("groups");
+            var groupMembers = [];
+
+            // get all members of the group
+            groupsRef.get()
+            .then(snapshot => {
+                snapshot.docs.forEach((group) => {
+                    var groupData = group.data();
+                    
+                    groupMembers.push(groupData.members);
+                    return;
+                })
+            })
+            this.setState({groupMembers: groupMembers});
+
+            
             var posts = [];
 
             postsRef.get()
@@ -46,28 +59,33 @@ class Home extends React.Component {
                     var postData = post.data();
                     var uid = postData.uid;
                     var posted_by = postData.posted_by;
-                    var key = postData.key
-                    var decrypted = CryptoJS.AES.decrypt(postData.body, key).toString(CryptoJS.enc.Latin1);
+                    var body = postData.body;
+                    
+                    // decrypt if part of group
+                    for(var i = 0; i <= groupMembers.length; i++){
+                        if(posted_by === groupMembers[0][i]["name"]){
+                            var key = postData.key
+                            body = CryptoJS.AES.decrypt(postData.body, key).toString(CryptoJS.enc.Latin1);
+                        }
+                    }
 
                     if (uid === 7 && posted_by === "current_user"){
                         uid = 'current_user';
                         posted_by = 'You';
                     }
 
+                    // post will contain decrypted or encrypted body depending on group inclusion
                     posts.push({
                         uid: uid,
                         id: post.id,
                         name: posted_by,
-                        body: decrypted
+                        body: body
                     })
                     return;
                 })
             })
 
             this.setState({allPosts: posts})
-
-            //this.sortPosts(posts)
-            this.postDataWithoutUserInfo = posts;
 
             var usersRef = db.collection("users");
             var users = [];
@@ -81,25 +99,10 @@ class Home extends React.Component {
                         id: user.id,
                         name: userData.fullName,
                         email: userData.email
-     
                     });
                     return;
                 })
             })
-
-            // var feedData = this.matchAccounts(users);
-
-            // this.setState({allPosts: feedData});
-            // fetch('https://jsonplaceholder.typicode.com/posts')
-            //     .then(response => response.json())
-            //     .then(json => this.sortPosts(json))
-            //     .then(() => {
-            //         return fetch('https://jsonplaceholder.typicode.com/users')
-            //     })
-            //     .then(response => response.json())
-            //     .then(json => this.matchAccounts(json))
-            //     .then(json => this.setState({ allPosts: json }))
-            //     .catch(error => console.log(error))
         }
 
         this.loaded = true
@@ -107,7 +110,6 @@ class Home extends React.Component {
 
 
     userPost(post) {
-        let totalLength = this.state.allPosts.length + this.state.userPosts.length
         let newPostData = {
             name: 'You',
             uid: 'current_user',
@@ -139,41 +141,6 @@ class Home extends React.Component {
             userPosts: this.newUserPosts
         })
     }
-
-
-    // sortPosts(array) {
-    //     var currentIndex = array.length, temporaryValue, randomIndex;
-
-    //     // While there remain elements to shuffle...
-    //     while (0 !== currentIndex) {
-
-    //         // Pick a remaining element...
-    //         randomIndex = Math.floor(Math.random() * currentIndex);
-    //         currentIndex -= 1;
-
-    //         // And swap it with the current element.
-    //         temporaryValue = array[currentIndex];
-    //         array[currentIndex] = array[randomIndex];
-    //         array[randomIndex] = temporaryValue;
-    //     }
-
-    //     this.postDataWithoutUserInfo = array;
-    //     return array;
-    // }
-
-    // matchAccounts(userData) {
-    //     let completeFeedData = []
-    //     for (let i = 0; i < this.postDataWithoutUserInfo.length; i++) {
-    //         for (let j = 0; j < userData.length; j++) {
-    //             if (this.postDataWithoutUserInfo[i].posted_by === userData[j].id) {
-
-    //                 completeFeedData.push({ ...this.postDataWithoutUserInfo[i], ...userData[j] })
-    //             }
-    //         }
-    //     }
-
-    //     return completeFeedData
-    // }
 
     render() {
         return (

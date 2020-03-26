@@ -4,18 +4,12 @@ import {Navbar, Nav} from 'react-bootstrap';
 export default class Navigation extends Component{
     render(){
         return (
-            <Navbar bg="dark" variant="dark" >
+            <Navbar bg="danger" variant="dark" >
                 <Navbar.Brand>Twooter</Navbar.Brand>
-                <Navbar.Toggle aria-controls="basic-navbar-nav"/>
-                <Navbar.Collapse id="basic-navbar-nav">
-                    <Nav className="mr-auto">
-                        <Nav.Link href="/login">Login</Nav.Link>
-                        <Nav.Link href="/test">Test</Nav.Link>
-                        <Nav.Link href="/user">New User</Nav.Link>
+                    <Nav className="justify-content-end" >
                         <Nav.Link href="/">My Feed</Nav.Link>
-                        <Nav.Link href="/error">Error</Nav.Link>
+                        <Nav.Link href="/group">Group</Nav.Link>
                     </Nav>
-                </Navbar.Collapse>
             </Navbar>
         )
     }

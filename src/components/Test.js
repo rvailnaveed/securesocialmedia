@@ -30,7 +30,6 @@ class Test extends React.Component {
         });
     }
     
-
     deleteAllPosts(){
         const db = firestore;
         var postsRef = db.collection("posts");
@@ -84,7 +83,6 @@ class Test extends React.Component {
             key: ""
         })
     }
-
 
     render() {
         return (

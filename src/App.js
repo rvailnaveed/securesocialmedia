@@ -6,6 +6,7 @@ import Navigation from "./components/Navigation"
 import Login from "./components/Login";
 import User from "./components/User";
 import Test from "./components/Test";
+import Group from "./components/Group"
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
           <Route path="/" component={Home} exact/>
           <Route path="/test" component={Test} exact/>
           <Route path="/user" component={User} exact/>
+          <Route path="/group" component={Group} exact/>
           <Route path="/login" exact component={Login} />
           <Route component={Error}/>
         </Switch>

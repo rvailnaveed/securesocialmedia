@@ -60,10 +60,11 @@ class Home extends React.Component {
                     var uid = postData.uid;
                     var posted_by = postData.posted_by;
                     var body = postData.body;
-                    
+                    console.log(posted_by)
                     // decrypt if part of group
                     for(var i = 0; i <= groupMembers.length; i++){
-                        if(posted_by === groupMembers[0][i]["name"]){
+                        if(posted_by === groupMembers[0][i]["name"] || posted_by === "current_user"){
+                            
                             var key = postData.key
                             body = CryptoJS.AES.decrypt(postData.body, key).toString(CryptoJS.enc.Latin1);
                         }
@@ -145,7 +146,6 @@ class Home extends React.Component {
     render() {
         return (
             <div>
-                <Userbar />
                 <div className="container">
                     <div className="row">
                         <div className="col">

@@ -10,10 +10,8 @@ class Userbar extends React.Component {
                 </button>
                 <div className="collapse navbar-collapse" id="userLinks">
                     <ul className="navbar-nav ml-auto">
-                        <li className="nav-item active"><a className="nav-link" href="#">Feed</a></li>
-                        <li className="nav-item"><a className="nav-link" href="#">Messages</a></li>
-                        <li className="nav-item"><a className="nav-link" href="#">Notifications</a></li>
-                        <li className="nav-item"><a className="nav-link" href="#">Settings</a></li>
+                        <li className="nav-item active"><a className="nav-link" href="Home.js">Feed</a></li>
+                        <li className="nav-item"><a className="nav-link" href="Test.js">Group</a></li>
                     </ul>
                 </div>
             </nav>

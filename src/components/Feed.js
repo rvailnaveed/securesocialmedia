@@ -3,14 +3,21 @@ import Post from "./Post";
 
 class Feed extends React.Component {
     render() {
-        return (
-            <div>
-                {this.props.postData.map((post, key) =>
-                    <Post postData={post} key={post.posted_by} />
-                )}
-            </div>
-        )
+        if (this.props.postData.length > 0) {
+            return (
+                <div>
+                    {this.props.postData.map((post, i) => 
+                        <Post postData={post} key={post.id} />
+                    )}
+                </div>
+            )
+        } 
+        else {
+            return (
+                <div></div>
+            )
+        }
     }
 }
 
-export default Feed
+export default Feed;

@@ -21,6 +21,7 @@ class Group extends React.Component{
     
     hideModal(){
         this.setState({isOpen: false})
+        window.location.href="/"
     };
 
     render(){

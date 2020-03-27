@@ -1,6 +1,5 @@
 import React from 'react';
 import firestore from "./Firebase";
-import Userbar from "./Userbar";
 import CreatePost from "./CreatePost";
 import Feed from "./Feed";
 import UserFeed from "./UserFeed";
@@ -49,8 +48,6 @@ class Home extends React.Component {
                 })
             })
             this.setState({groupMembers: groupMembers});
-
-            
             var posts = [];
 
             postsRef.get()
@@ -60,7 +57,6 @@ class Home extends React.Component {
                     var uid = postData.uid;
                     var posted_by = postData.posted_by;
                     var body = postData.body;
-                    console.log(posted_by)
                     // decrypt if part of group
                     for(var i = 0; i <= groupMembers.length; i++){
                         if(posted_by === groupMembers[0][i]["name"] || posted_by === "current_user"){
@@ -84,36 +80,18 @@ class Home extends React.Component {
                     })
                     return;
                 })
+                this.setState({allPosts: posts})
             })
-
-            this.setState({allPosts: posts})
-
-            var usersRef = db.collection("users");
-            var users = [];
-     
-            usersRef.get()
-            .then(snapshot => {
-                snapshot.docs.forEach((user) => {
-                    var userData = user.data();
-                    
-                    users.push({
-                        id: user.id,
-                        name: userData.fullName,
-                        email: userData.email
-                    });
-                    return;
-                })
-            })
+            this.loaded = true
         }
-
-        this.loaded = true
     }
 
-
     userPost(post) {
+        let totalLength = this.state.allPosts.length + this.state.userPosts.length
         let newPostData = {
             name: 'You',
             uid: 'current_user',
+            id: totalLength + 2,
             body: post,
             userPost: true
         }
@@ -134,7 +112,6 @@ class Home extends React.Component {
             body: encrypted,
             key: key
         });
-
 
         this.newUserPosts.unshift(newPostData)
 
@@ -158,7 +135,6 @@ class Home extends React.Component {
                     <UserFeed postData={this.state.userPosts} />
                     <Feed postData={this.state.allPosts} />
                 </div>
-
             </div>
         )
     }

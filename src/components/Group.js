@@ -1,6 +1,7 @@
 import React from "react";
 import {Button, Modal} from 'react-bootstrap';
 import GroupMember from "./GroupMember";
+import firestore from "./Firebase";
 
 class Group extends React.Component{
     constructor() {
@@ -8,16 +9,34 @@ class Group extends React.Component{
 
         this.state = {
             isOpen: true,
-            setIsOpen: false
+            setIsOpen: false,
+            allUsers: []
         }
        
-        this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
     }
 
-    showModal(){
-        this.setState({isOpen: true});
-    };
+    componentDidMount(){
+        const db = firestore;
+        var usersRef = db.collection("users");
+        var users = [];
+        usersRef.get()
+        .then(snapshot => {
+            snapshot.docs.forEach((user) => {
+                var userData = user.data();
+                if(userData.id !== 7){
+                    users.push({
+                        name: userData.name,
+                        id: userData.id,
+                        avatar_url: "https://picsum.photos/60?image" + String(userData.id)
+                    });
+                    return;
+                }
+                
+            })
+            this.setState({allUsers: users})
+        })
+    }
     
     hideModal(){
         this.setState({isOpen: false})
@@ -32,7 +51,9 @@ class Group extends React.Component{
                   <Modal.Title>Group Members</Modal.Title>
               </Modal.Header>
               <Modal.Body>
-                  <GroupMember/>
+                {this.state.allUsers.map((user) => 
+                    <GroupMember userInfo={user} key={user.id}/>
+                )}
               </Modal.Body>
           </Modal> 
         );

@@ -30,8 +30,11 @@ class CreatePost extends React.Component {
     }
 
     render() {
+        var style = {
+            margin: "50px"
+        }
         return (
-            <div className="mb-2 fixedMenuFix">
+            <div className="mb-2 fixedMenuFix" style={style}>
                 <input id="postField" onChange={this.updatePostText} type="text" className="form-control" placeholder="What's up?" />
                 <button onClick={this.submitPostText} className="btn btn-large btn-warning btn-block"><span>Post</span></button>
             </div>

@@ -28,7 +28,8 @@ class Group extends React.Component{
                     users.push({
                         name: userData.name,
                         id: userData.id,
-                        avatar_url: "https://picsum.photos/60?image" + String(userData.id)
+                        avatar_url: "https://picsum.photos/60?image" + String(userData.id),
+                        membership: true
                     });
                     return;
                 }
@@ -45,7 +46,7 @@ class Group extends React.Component{
 
     render(){
         return(
-          <Modal show={this.state.isOpen} onHide={this.hideModal} size="lg"
+          <Modal show={this.state.isOpen} onHide={this.hideModal} size="sm"
           aria-labelledby="contained-modal-title-vcenter">
               <Modal.Header closeButton>
                   <Modal.Title>Group Members</Modal.Title>

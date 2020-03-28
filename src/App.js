@@ -6,8 +6,7 @@ import Navigation from "./components/Navigation"
 import Login from "./components/Login";
 import User from "./components/User";
 import Test from "./components/Test";
-import Group from "./components/Group"
-
+import Group from "./components/Group";
 
 function App() {
   return (

@@ -1,6 +1,9 @@
 import React from "react";
 import { Button, Icon } from "semantic-ui-react";
 import { Image } from "react-bootstrap";
+import firestore from "./Firebase";
+import Firebase from "firebase";
+require("firebase/firestore");
 
 class GroupMember extends React.Component{
     constructor(props){
@@ -9,24 +12,47 @@ class GroupMember extends React.Component{
         this.state = {
             included: false,
             colour: "red",
-            icon: "thumbs down outline icon"
+            icon: "toggle off"
         }
         this.toggleMember = this.toggleMember.bind(this);
     }
 
+    componentDidMount(){
+        var db = firestore;
+        var groupRef = db.collection("groups").doc("rw9BI2AbLfz0rzEoxGW7");
+        groupRef.get()
+        .then(snapshot => {
+            var currMembers = snapshot.data().members;
+            for(var i = 0; i < currMembers.length; i++){
+                console.log(currMembers[i]);
+                if(this.props.userInfo.id === currMembers[i]["uid"]){
+                    this.toggleMember();
+                }
+            }
+        })
+    }
+
     toggleMember(){
+        var db = firestore;
+        var groupRef = db.collection("groups").doc("rw9BI2AbLfz0rzEoxGW7");
         if(this.state.included === false){
             this.setState({
                 included: true,
                 colour: "green",
-                icon: "thumbs up outline icon"
+                icon: "toggle on"
+            })
+            groupRef.update({
+                "members": Firebase.firestore.FieldValue.arrayUnion({"name": this.props.userInfo.name, "uid": this.props.userInfo.id})
             })
         }
         else {
             this.setState({
                 included: false,
                 colour: "red",
-                icon: "thumbs down outline icon"
+                icon: "toggle off"
+            })
+            groupRef.update({
+                "members": Firebase.firestore.FieldValue.arrayRemove({"name": this.props.userInfo.name, "uid": this.props.userInfo.id})
             })
         }
     }

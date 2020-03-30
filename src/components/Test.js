@@ -86,7 +86,7 @@ class Test extends React.Component {
 
     render() {
         return (
-            <div>
+            <div style={{margin: "100px"}}>
                 <Button onClick={this.deleteAllPosts}>Purge Firestore Posts</Button>
                 <Button onClick={this.deleteUserPosts}>Delete User Posts</Button>
 

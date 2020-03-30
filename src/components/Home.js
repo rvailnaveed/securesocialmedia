@@ -34,20 +34,20 @@ class Home extends React.Component {
             const db = firestore;
 
             var postsRef = db.collection("posts");
-            var groupsRef = db.collection("groups");
+            var groupRef = db.collection("groups").doc("rw9BI2AbLfz0rzEoxGW7");
             var groupMembers = [];
 
             // get all members of the group
-            groupsRef.get()
+            groupRef.get()
             .then(snapshot => {
-                snapshot.docs.forEach((group) => {
-                    var groupData = group.data();
-                    
-                    groupMembers.push(groupData.members);
-                    return;
-                })
+                var currMembers = snapshot.data().members;
+                for(var i = 0; i < currMembers.length; i++){
+                    groupMembers.push(currMembers[i])
+                }
+                this.setState({groupMembers: groupMembers})
             })
-            this.setState({groupMembers: groupMembers});
+    
+            
             var posts = [];
 
             postsRef.get()
@@ -55,12 +55,14 @@ class Home extends React.Component {
                 snapshot.docs.forEach((post) => {
                     var postData = post.data();
                     var uid = postData.uid;
+                    //console.log(uid)
                     var posted_by = postData.posted_by;
                     var body = postData.body;
                     // decrypt if part of group
-                    for(var i = 0; i <= groupMembers.length; i++){
-                        if(posted_by === groupMembers[0][i]["name"] || posted_by === "current_user"){
-                            
+                    for(var i = 0; i < this.state.groupMembers.length; i++){
+                        console.log(typeof uid, typeof groupMembers[i].uid)
+                        if(uid == this.state.groupMembers[i].uid || posted_by === "current_user"){
+                            //console.log(uid)
                             var key = postData.key
                             body = CryptoJS.AES.decrypt(postData.body, key).toString(CryptoJS.enc.Latin1);
                         }
@@ -81,8 +83,9 @@ class Home extends React.Component {
                     return;
                 })
                 this.setState({allPosts: posts})
+                this.loaded = true;
             })
-            this.loaded = true
+            
         }
     }
 

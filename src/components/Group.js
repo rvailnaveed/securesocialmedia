@@ -45,9 +45,6 @@ class Group extends React.Component {
     }
 
     render() {
-        var divStyle = {
-            "text-align": "center"
-        };
         return (
             <Modal
                 show={this.state.isOpen}

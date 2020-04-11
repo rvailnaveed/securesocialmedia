@@ -18,6 +18,7 @@ class GroupMember extends React.Component{
     }
 
     componentDidMount(){
+        // get current group inclusion status and set status for displayt as appropriate
         var db = firestore;
         var groupRef = db.collection("groups").doc("rw9BI2AbLfz0rzEoxGW7");
         groupRef.get()
@@ -41,6 +42,7 @@ class GroupMember extends React.Component{
                 colour: "green",
                 icon: "toggle on"
             })
+            // a new member has been added to firestore backend
             groupRef.update({
                 "members": Firebase.firestore.FieldValue.arrayUnion({"name": this.props.userInfo.name, "uid": this.props.userInfo.id})
             })
@@ -51,6 +53,7 @@ class GroupMember extends React.Component{
                 colour: "red",
                 icon: "toggle off"
             })
+            // the member has been removed from group, so we reflect this in the backend
             groupRef.update({
                 "members": Firebase.firestore.FieldValue.arrayRemove({"name": this.props.userInfo.name, "uid": this.props.userInfo.id})
             })

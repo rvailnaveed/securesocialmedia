@@ -23,7 +23,6 @@ class Home extends React.Component {
         }
        
         this.userPost = this.userPost.bind(this)
-
         this.loaded = false
         this.newUserPosts = []
     }
@@ -46,28 +45,27 @@ class Home extends React.Component {
                 }
                 this.setState({groupMembers: groupMembers})
             })
-    
-            
+
             var posts = [];
 
+            // retrieve all posts from firestore backend
             postsRef.get()
             .then(snapshot => {
                 snapshot.docs.forEach((post) => {
                     var postData = post.data();
                     var uid = postData.uid;
-                    //console.log(uid)
                     var posted_by = postData.posted_by;
                     var body = postData.body;
-                    // decrypt if part of group
+                    // decrypt using post key only if part of group
                     for(var i = 0; i < this.state.groupMembers.length; i++){
                         console.log(typeof uid, typeof groupMembers[i].uid)
                         if(uid == this.state.groupMembers[i].uid || posted_by === "current_user"){
-                            //console.log(uid)
                             var key = postData.key
                             body = CryptoJS.AES.decrypt(postData.body, key).toString(CryptoJS.enc.Latin1);
                         }
                     }
 
+                    // change post formatting for current user (purely display purposes)
                     if (uid === 7 && posted_by === "current_user"){
                         uid = 'current_user';
                         posted_by = 'You';
@@ -85,10 +83,10 @@ class Home extends React.Component {
                 this.setState({allPosts: posts})
                 this.loaded = true;
             })
-            
         }
     }
 
+    // Handles a new post created by the current user
     userPost(post) {
         let totalLength = this.state.allPosts.length + this.state.userPosts.length
         let newPostData = {
@@ -99,14 +97,14 @@ class Home extends React.Component {
             userPost: true
         }
 
-        // Generate key for new post
+        // Generate a new key for the post
         var current_date = (new Date()).valueOf().toString();
         var random_string = Math.random().toString();
         var key = Crypto.createHash('sha1').update(current_date + random_string).digest('hex');
 
         var encrypted = CryptoJS.AES.encrypt(post, key).toString();
-        //console.log(encrypted.);
 
+        // push new encrypted post object to firestore backend
         const db = firestore;
         var postsRef = db.collection("posts");
         postsRef.add({
@@ -144,5 +142,3 @@ class Home extends React.Component {
 }
 
 export default Home;
-
-
